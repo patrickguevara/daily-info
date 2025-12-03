@@ -21,6 +21,7 @@ class NewsApiService
             $response = Http::timeout(10)
                 ->get("{$this->baseUrl}/everything", [
                     'apiKey' => $this->apiKey,
+                    'q' => 'a OR the OR is', // Broad query to get general news
                     'from' => $date,
                     'to' => $date,
                     'sortBy' => 'publishedAt',
