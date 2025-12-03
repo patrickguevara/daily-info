@@ -18,7 +18,7 @@ class InMemoryDatabaseServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Run migrations for in-memory database only once per PHP process
-        if (config('database.default') === 'memory' && !self::$migrated) {
+        if (!self::$migrated) {
             try {
                 Artisan::call('migrate', [
                     '--database' => 'memory',
@@ -27,7 +27,9 @@ class InMemoryDatabaseServiceProvider extends ServiceProvider
                 ]);
                 self::$migrated = true;
             } catch (\Exception $e) {
-                Log::error('Failed to run in-memory database migrations: ' . $e->getMessage());
+                Log::error('Failed to run in-memory database migrations', [
+                    'error' => $e->getMessage(),
+                ]);
             }
         }
     }
