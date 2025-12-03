@@ -1,47 +1,63 @@
 <script setup lang="ts">
-import AppLayout from '@/layouts/AppLayout.vue';
-import { dashboard } from '@/routes';
-import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/vue3';
-import PlaceholderPattern from '../components/PlaceholderPattern.vue';
+import { Head, usePage } from '@inertiajs/vue3'
+import { computed, ref, watch } from 'vue'
+import type { DashboardData } from '@/types/dashboard'
+import DatePicker from '@/components/DatePicker.vue'
+import NewsSection from '@/components/NewsSection.vue'
+import WeatherSection from '@/components/WeatherSection.vue'
+import StockSection from '@/components/StockSection.vue'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard().url,
-    },
-];
+const page = usePage()
+const props = defineProps<DashboardData>()
+
+const isLoading = ref(false)
+const errorMessage = computed(() => page.props.flash?.error as string | undefined)
+
+// Show loading during navigation
+watch(() => page.props, () => {
+  isLoading.value = false
+}, { deep: true })
 </script>
 
 <template>
-    <Head title="Dashboard" />
+  <Head title="Daily Info Dashboard" />
 
-    <AppLayout :breadcrumbs="breadcrumbs">
-        <div
-            class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4"
-        >
-            <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-                <div
-                    class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-                >
-                    <PlaceholderPattern />
-                </div>
-                <div
-                    class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-                >
-                    <PlaceholderPattern />
-                </div>
-                <div
-                    class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-                >
-                    <PlaceholderPattern />
-                </div>
-            </div>
-            <div
-                class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border"
-            >
-                <PlaceholderPattern />
-            </div>
+  <div class="min-h-screen bg-background p-6">
+    <LoadingSpinner
+      v-if="isLoading"
+      :message="`Fetching data for ${date}...`"
+    />
+
+    <div class="max-w-7xl mx-auto space-y-6">
+      <!-- Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 class="text-4xl font-bold">Daily Info Dashboard</h1>
+          <p class="text-muted-foreground mt-1">
+            Last updated: {{ new Date(lastUpdated).toLocaleString() }}
+          </p>
         </div>
-    </AppLayout>
+        <DatePicker
+          :current-date="dateParam"
+          :available-dates="availableDates"
+        />
+      </div>
+
+      <!-- Error Alert -->
+      <Alert v-if="errorMessage" variant="destructive">
+        <AlertDescription>{{ errorMessage }}</AlertDescription>
+      </Alert>
+
+      <!-- News Section -->
+      <NewsSection :news="news" :loading="isLoading" />
+
+      <!-- Weather and Stocks Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <WeatherSection :weather="weather" :loading="isLoading" />
+        <StockSection :stocks="stocks" :loading="isLoading" />
+      </div>
+    </div>
+  </div>
 </template>
