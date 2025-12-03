@@ -14,6 +14,7 @@ const props = defineProps<DashboardData>()
 
 const isLoading = ref(false)
 const errorMessage = computed(() => page.props.flash?.error as string | undefined)
+const hasNoData = computed(() => props.news.length === 0 && props.weather.length === 0 && props.stocks.length === 0)
 
 // Show loading during navigation
 watch(() => page.props, () => {
@@ -48,6 +49,19 @@ watch(() => page.props, () => {
       <!-- Error Alert -->
       <Alert v-if="errorMessage" variant="destructive">
         <AlertDescription>{{ errorMessage }}</AlertDescription>
+      </Alert>
+
+      <!-- No Data Alert -->
+      <Alert v-if="hasNoData && !isLoading">
+        <AlertDescription>
+          <div class="space-y-2">
+            <p class="font-semibold">No news available for {{ date }}</p>
+            <p class="text-sm">
+              News articles may not be available yet for this date. NewsAPI typically indexes articles with a delay.
+              Try selecting an earlier date from the date picker above, or check back later.
+            </p>
+          </div>
+        </AlertDescription>
       </Alert>
 
       <!-- News Section -->
