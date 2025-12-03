@@ -43,4 +43,8 @@ return [
         'key' => env('OPENWEATHER_API_KEY'),
     ],
 
+    'tiingo' => [
+        'key' => env('TIINGO_API_KEY'),
+    ],
+
 ];
