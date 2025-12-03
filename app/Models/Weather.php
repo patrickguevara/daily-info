@@ -26,6 +26,6 @@ class Weather extends Model
 
     public function scopeForDate($query, string $date)
     {
-        return $query->where('fetched_for_date', $date);
+        return $query->whereDate('fetched_for_date', $date);
     }
 }
