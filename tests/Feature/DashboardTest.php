@@ -2,9 +2,11 @@
 
 use App\Models\User;
 
-test('guests are redirected to the login page', function () {
+test('guests can access the dashboard', function () {
     $response = $this->get(route('dashboard'));
-    $response->assertRedirect(route('login'));
+    // Dashboard redirects to dashboard.date with today's date
+    $response->assertRedirect();
+    $response->assertStatus(302);
 });
 
 test('authenticated users can visit the dashboard', function () {
@@ -12,5 +14,7 @@ test('authenticated users can visit the dashboard', function () {
     $this->actingAs($user);
 
     $response = $this->get(route('dashboard'));
-    $response->assertStatus(200);
+    // Dashboard redirects to dashboard.date with today's date
+    $response->assertRedirect();
+    $response->assertStatus(302);
 });

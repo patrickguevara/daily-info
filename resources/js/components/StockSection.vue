@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
-const props = defineProps<{
+defineProps<{
   stocks: StockData[]
   loading?: boolean
 }>()
