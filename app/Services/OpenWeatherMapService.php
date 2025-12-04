@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 class OpenWeatherMapService
 {
-    private string $apiKey;
+    private ?string $apiKey;
     private string $baseUrl = 'https://api.openweathermap.org/data/2.5';
     private array $cache = [];
 

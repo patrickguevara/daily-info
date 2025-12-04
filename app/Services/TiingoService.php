@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 class TiingoService
 {
-    private string $apiKey;
+    private ?string $apiKey;
     private string $baseUrl = 'https://api.tiingo.com';
 
     public function __construct()

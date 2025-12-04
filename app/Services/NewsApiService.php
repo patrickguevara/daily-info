@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 class NewsApiService
 {
-    private string $apiKey;
+    private ?string $apiKey;
     private string $baseUrl = 'https://newsapi.org/v2';
 
     public function __construct()
