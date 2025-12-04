@@ -13,7 +13,11 @@ const props = defineProps<{
   loading?: boolean
 }>()
 
-const formatTemperature = (temp: number) => `${Math.round(temp)}°C`
+const formatTemperature = (temp: number | string) => {
+  const celsius = typeof temp === 'string' ? parseFloat(temp) : temp
+  const fahrenheit = (celsius * 9/5) + 32
+  return `${Math.round(celsius)}°C / ${Math.round(fahrenheit)}°F`
+}
 </script>
 
 <template>

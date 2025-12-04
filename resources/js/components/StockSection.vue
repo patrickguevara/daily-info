@@ -13,7 +13,10 @@ const props = defineProps<{
   loading?: boolean
 }>()
 
-const formatPrice = (price: number) => `$${price.toFixed(2)}`
+const formatPrice = (price: number | string) => {
+  const numPrice = typeof price === 'string' ? parseFloat(price) : price
+  return `$${numPrice.toFixed(2)}`
+}
 </script>
 
 <template>
